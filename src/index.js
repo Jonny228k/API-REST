@@ -1,17 +1,12 @@
 import express from "express";
+import conexao from "../infra/conexao.js"
 const app = express();
 
 
 //Habilitando a leitura de json com express
 app.use(express.json())
 
-//Mock do inventario
-const inventario = [
-    { id: 1, nome: "Picareta", quantidade: 1, durabilidade: 52 },
-    { id: 2, nome: "Tocha", quantidade: 6 },
-    { id: 3, nome: "Espada", quantidade: 1, durabilidade: 30 },
-    { id: 4, nome: "Mapa", quantidade: 1, durabilidade: 12 },
-]
+
 
 //retornar objeto pelo id
 function buscarItemporId(id) {
@@ -23,14 +18,17 @@ function buscarIdporItem(id) {
     return inventario.findIndex(item => item.id == id)
 }
 
-//criando uma rota padrão/raiz
-app.get("/", (req, res) => {
-    res.send("Bem-vindo ao Inventário do Minecraft!")
-})
 
 //Criando uma rota para o inventario
 app.get("/inventario", (request, response) => {
-    response.status(200).send(Inventario)
+    const sql = "SELECT * FROM inventario"
+    conexao.query(sql, (erro, result) => {
+        if(erro) {
+            response.status(404).json(`A pagina nao pode ser carregada: ${erro}`)
+        } else {
+            response.status(200).json(result)
+        }
+    })
 })
 
 app.get("/inventario/:id", (request, response) => {

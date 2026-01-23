@@ -8,4 +8,6 @@ const conexao = mysql.createConnection({
     database: "bdminecraft"
 })
 
+conexao.connect()
+
 export default conexao
