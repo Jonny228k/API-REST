@@ -23,7 +23,7 @@ function buscarIdporItem(id) {
 app.get("/inventario", (request, response) => {
     const sql = "SELECT * FROM inventario"
     conexao.query(sql, (erro, result) => {
-        if(erro) {
+        if (erro) {
             response.status(404).json(`A pagina nao pode ser carregada: ${erro}`)
         } else {
             response.status(200).json(result)
@@ -32,29 +32,54 @@ app.get("/inventario", (request, response) => {
 })
 
 app.get("/inventario/:id", (request, response) => {
-    //let index = request.params.id
-    response.json(burcarItemporId(request.params.id))
+    const id = request.params.id
+    const sql = "SELECT * FROM inventario WHERE id = ?"
+    conexao.query(sql, id, (erro, result) => {
+        if (erro) {
+            response.status(404).json(erro)
+        } else {
+            response.status(200).json(result)
+        }
+    })
 })
 
 //Criando um get.POST para que possa ser adicionado item no inventario
 app.post("/inventario", (request, response) => {
-    Inventario.push(request.body),
-        response.status(201).send("Novo item adicionado com sucesso!")
+    const item = request.body
+    const sql = "INSERT INTO FROM inventario SET ?"
+    conexao.query(sql, item, (erro, result) => {
+        if (erro) {
+            response.status(404).json(`Ops, não foi possivel a inclusão no inventario ${erro}`)
+        } else {
+            response.status(200).json(result)
+        }
+    })
 })
 
 app.delete("/inventario/:id", (req, res) => {
-    let index = buscarIdporItem(req.params.id)
-    Inventario.splice(index, 1)
-    res.status(200).send("Item removido com sucesso!")
+    const id = request.params.id
+    const sql = "DELETE FROM inventario WHERE id = ?"
+    conexao.query(sql, id, (erro, result) => {
+        if (erro) {
+            response.status(404).json(erro)
+        } else {
+            response.status(200).json(result)
+        }
+    })
 })
 
 // Put de atualização de item do inventario
 app.put("/inventario/:id", (req, res) => {
-    let index = buscarIdporItem(req.params.id)
-    inventario[index] = req.body.item
-    invenntario[index] = req.body.quantidade
-    inventario[index] = req.body.durabilidade
-    response.json(inventario)
+    const id = request.params.id
+    const item = request.body
+    const sql = "UPDATE inventario SET ? WHERE ID = ?"
+    conexao.query(sql, [item, id], (erro, result) => {
+        if (erro) {
+            response.status(404).json(`Ops, não foi possivel a inclusão no inventario ${erro}`)
+        } else {
+            response.status(200).json(result)
+        }
+    })
 })
 
 
