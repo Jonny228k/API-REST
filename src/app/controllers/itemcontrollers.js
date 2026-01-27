@@ -1,67 +1,39 @@
-import conexao from "../database/conexao.js"
+
+import Itemrepositories from "../repositories/itemrepositories.js"
+const itemrepositories = new Itemrepositories()
 
 class item {
 
-    index(request, response) {
-        const sql = "SELECT * FROM inventario"
-        conexao.query(sql, (erro, result) => {
-            if (erro) {
-                response.status(404).json(`A pagina nao pode ser carregada: ${erro}`)
-            } else {
-                response.status(200).json(result)
-            }
-        })
+    async index(request, response) {
+        const row = await itemrepositories.findAll()
+        response.json(row)
     }
 
-    show(request, response) {
-    const id = request.params.id
-    const sql = "SELECT * FROM inventario WHERE id = ?"
-    conexao.query(sql, id, (erro, result) => {
-        if (erro) {
-            response.status(404).json(erro)
-        } else {
-            response.status(200).json(result)
-        }
-    })
-}
+    async show(request, response) {
+        const id = request.params.id
+        const row = await itemrepositories.findById(id)
+        response.json(row)
+    }
 
-store(request, response) {
-    const item = request.body
-    const sql = "INSERT INTO inventario SET ?"
-    conexao.query(sql, item, (erro, result) => {
-        if (erro) {
-            response.status(404).json(`Ops, não foi possivel a inclusão no inventario ${erro}`)
-        } else {
-            response.status(200).json(result)
-        }
-    })
-}
+    async store(request, response) {
+        const item = request.body
+        const row = await itemrepositories.create(item)
+        response.json(row)
+    }
 
-update(request, response) {
-    const id = request.params.id
-    const item = request.body
-    const sql = "UPDATE inventario SET ? WHERE ID = ?"
-    conexao.query(sql, [item, id], (erro, result) =>{
-        if (erro) {
-            response.status(404).json(`Ops, não foi possivel a inclusão no inventario ${erro}`)
-        } else {
-            response.status(200).json(result)
-        }
-    })
-}
+    async update(request, response) {
+        const id = request.params.id
+        const item = request.body
+        const row = await itemrepositories.update(id, item)
+        response.json(row)
+    }
 
-    delete(request, response) {
-    const id = request.params.id
-    const sql = "DELETE FROM inventario WHERE id = ?"
-    conexao.query(sql, id, (erro, result) => {
-        if (erro) {
-            response.status(404).json(erro)
-        } else {
-            response.status(200).json(result)
-        }
-    })
-}
-    
+    async delete(request, response) {
+        const id = request.params.id
+        const row = await itemrepositories.delete(id)
+        response.json(row)
+    }
+
 }
 
 export default new item() 
