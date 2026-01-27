@@ -1,74 +1,29 @@
-import conexao from "../database/conexao.js"
-import itemcontrollers from "../controllers/itemcontrollers.js" 
+import { consulta } from "../database/conexao.js"
 
 class itemrepositories {
-
+//CRUD
     create(item) {
         const sql = "INSERT INTO inventario SET ?"
-        return new Promise((resolve, reject) => {
-            conexao.query(sql, item, (erro, result) => {
-                if (erro) {
-                    return reject(`Não foi possivel adicionar o item: ${erro}`)
-                } else {
-                    const row = JSON.parse(JSON.stringify(result))
-                    return resolve(row)
-                }
-            })
-        })
+        return consulta(sql, item, "Não foi possivel cadastrar o item")
     }
 
 
     findAll() {
         const sql = "SELECT * FROM inventario"
-        return new Promise((resolve, reject) => {
-            conexao.query(sql, (erro, result) => {
-                if (erro) {
-                    return reject(erro)
-                } else {
-                    const row = JSON.parse(JSON.stringify(result))
-                    return resolve(row)
-                }
-            })
-        })
+        return consulta(sql, "Não foi possivel Localizar o item")
     }
 
     findById(id) {
         const sql = "SELECT * FROM inventario WHERE id = ?"
-        return new Promise((resolve, reject) => {
-            conexao.query(sql, id, (erro, result) => {
-                if (erro) {
-                    return reject(`Não foi possivel encontar o item buscado: ${erro}`)
-                } else {
-                    const row = JSON.parse(JSON.stringify(result))
-                    return resolve(row)
-                }
-            })
-        })
+        return consulta(sql, id, "Não foi possivel Localizar o item")
     }
     update(id, item) {
         const sql = "UPDATE inventario SET ? WHERE ID = ?"
-        return new Promise((resolve, reject) => {
-            conexao.query(sql, [item, id], (erro, result) => {
-                if (erro) {
-                    return reject(`Não foi possivel atualizar o item: ${erro}`)
-                } else {
-                    const row = JSON.parse(JSON.stringify(result))
-                    return resolve(row)
-                }
-            })
-        })
+        return consulta(sql, [item, id], "Não foi possivel atualizar o item")
     }
     delete(id) {
         const sql = "DELETE FROM inventario WHERE id = ?"
-        return new Promise((resolve, reject) => {
-            conexao.query(sql, id, (erro, result) => {
-                if (erro) {
-                    return reject (`Não foi possivel deletar o item: ${erro}`)
-                } else {
-                    return resolve (result)
-                }
-            })
-        })
+        return consulta(sql, id, "Não foi possivel deletar o item")
     }
 }
 
